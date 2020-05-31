@@ -1,0 +1,147 @@
+#include<stdio.h>
+
+#include <malloc.h>
+
+
+
+struct enemy {
+
+    int num;https://序号
+
+    char name[20];//名字
+
+    float score1, score2;//力量；魔法
+
+    struct enemy *next; // 链表下一个节点
+
+};//结构体定义
+
+
+
+// 添加新的敌人
+
+void addNode(struct enemy *head, struct enemy *node) {
+
+    if (NULL == head) {
+
+        printf("err:添加节点失败\n");
+
+        return;
+
+    }
+
+    while (NULL != head->next) {
+
+        head = head->next;
+
+    }
+
+    struct enemy  * tmp = (struct enemy *)malloc(sizeof(struct enemy));
+
+    *tmp = *node;
+
+    tmp->next = NULL;
+
+    head->next = tmp;
+
+}
+
+
+
+// 遍历打印链表
+
+void printChain(struct enemy * head) {
+
+    head = head->next;
+
+    printf("遍历打印链表信息：\n");
+
+    while (head) {
+
+        printf("序号：%d  名字：%s 力量：%.2f  魔法： %.2f \n", head->num, head->name, head->score1, head->score2);
+
+        head = head->next;
+
+    }
+
+}
+
+
+
+int main() {
+
+
+
+    FILE *fp;//文件指针
+
+    int i;// 定义循环变量
+
+    float temp = 0;//中间比较变量
+
+    int p = 10;//玩家的个数
+
+
+
+    struct enemy head;
+
+    head.next = NULL;
+
+
+
+
+
+    // 接收数据并把数据存入链表中
+
+    for (i = 0; i < p; i++) {
+
+        // 新节点
+
+        struct enemy  tmp;
+
+        printf("请依次输入第%d个学玩家的序号，姓名，和力量与魔法：", i + 1);//提示用户输入
+
+        fflush(0);
+
+        scanf("%d%s%f%f", &tmp.num, tmp.name, &tmp.score1, &tmp.score2);// 接受输入信息
+
+        addNode(&head, &tmp);
+
+    }
+
+
+
+    //打开文件
+
+    fp = fopen("st.txt", "w+");
+
+
+
+    // 遍历链表写数据到文件中
+
+    struct enemy *it = head.next;
+
+    printf("文件已保存，开始输出文件内容\n");
+
+    while (it) {
+
+        fprintf(fp, "序号：%d  名字：%s 力量：%.2f  魔法： %.2f \n", it->num, it->name, it->score1, it->score2);
+
+        printf( "序号：%d  名字：%s 力量：%.2f  魔法： %.2f \n", it->num, it->name, it->score1, it->score2);
+
+        it = it->next;
+
+    }
+
+
+
+    fclose(fp);
+
+
+
+    // 遍历打印链表信息
+
+    printChain(&head);
+
+    return 0;
+
+}
